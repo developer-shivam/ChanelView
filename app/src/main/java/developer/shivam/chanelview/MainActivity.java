@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         addTilesToContainer();
-
     }
 
     @Override
@@ -183,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 switch (tilesContainer.indexOfChild(v)) {
                     case 0:
-
                         break;
 
                     case 1:

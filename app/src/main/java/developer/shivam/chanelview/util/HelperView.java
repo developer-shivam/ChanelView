@@ -5,13 +5,13 @@ import android.view.View;
 public class HelperView {
 
     //The view above the currentView will be referred as precedingView
-    public static View precedingView;
+    private static View precedingView;
 
     //The main view is referenced as currentView
-    public static View currentView;
+    private static View currentView;
 
     //The view below the currentView will be referred as followingView
-    public static View followingView;
+    private static View followingView;
 
     public static View getPrecedingView() {
         return precedingView;
