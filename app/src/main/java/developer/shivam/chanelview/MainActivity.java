@@ -170,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void addFragmentToScreen(Fragment fragment) {
-        mDrawerToggle.setDrawerIndicatorEnabled(false);
         getSupportFragmentManager().beginTransaction().add(R.id.frame_layout, fragment, "sample_fragment").commit();
     }
 
