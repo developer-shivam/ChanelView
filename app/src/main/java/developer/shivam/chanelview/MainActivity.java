@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,8 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.Random;
 
 import developer.shivam.chanelview.util.HelperView;
 
@@ -63,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     DrawerLayout mDrawerLayout;
+    ActionBarDrawerToggle mDrawerToggle;
+    private SampleFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,11 +107,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void addTilesToContainer() {
 
         View tileView;
-
-        for (int i = 0; i < colors.length; i++) {
-            Random random = new Random();
-            colors[i] = 100000 + random.nextInt(900000);
-        }
 
         int[] images = {
                 R.drawable.image_one,
@@ -173,6 +169,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void addFragmentToScreen(Fragment fragment) {
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_layout, fragment, "sample_fragment").commit();
+    }
+
     @Override
     public void onClick(final View v) {
 
@@ -182,6 +183,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 switch (tilesContainer.indexOfChild(v)) {
                     case 0:
+                        if (tilesContainer.getChildAt(0).getLayoutParams().height != firstChildHeight) {
+                            downToUpScroll(HelperView.getCurrentView(), HelperView.getFollowingView());
+                        } else {
+                            isFragmentOpened = true;
+                            fragment = (SampleFragment) Fragment.instantiate(this, SampleFragment.class.getName());
+                            addFragmentToScreen(fragment);
+                        }
                         break;
 
                     case 1:
@@ -459,7 +467,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         navigationView = (NavigationView) findViewById(R.id.fragmentDrawer);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.mainDrawerLayout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+        mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout,
                 appBar,
                 R.string.open,
@@ -479,7 +487,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
 
-        mDrawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+    }
+
+    boolean isFragmentOpened = false;
+
+    @Override
+    public void onBackPressed() {
+        if (isFragmentOpened) {
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            isFragmentOpened = false;
+        } else {
+            super.onBackPressed();
+        }
     }
 }
