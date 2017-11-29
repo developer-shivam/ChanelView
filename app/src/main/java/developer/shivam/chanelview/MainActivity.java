@@ -365,8 +365,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 heightAnimator.setDuration(ANIMATION_DURATION);
 
+                ValueAnimator precedingViewHeightAnimator = ValueAnimator.ofInt(precedingView.getLayoutParams().height, firstChildHeight);
+                precedingViewHeightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        int height = (int) animation.getAnimatedValue();
+                        precedingView.getLayoutParams().height = height;
+                        precedingView.requestLayout();
+                    }
+                });
+                precedingViewHeightAnimator.setDuration(ANIMATION_DURATION);
+
                 scrollAnimator.start();
                 heightAnimator.start();
+                precedingViewHeightAnimator.start();
 
                 HelperView.setCurrentView(precedingView);
                 HelperView.setPrecedingView(tilesContainer.getChildAt(tilesContainer.indexOfChild(precedingView) - 1));
